@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
             public void onReceive(Context context, Intent intent) {
 
                 // checking for type intent filter
+              //  https://github.com/sushilKumar123456/MyApplication3.git
                 if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
