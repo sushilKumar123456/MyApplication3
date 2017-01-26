@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private TextView txtRegId, txtMessage;
+    private TextView txtRegId, txtMessage,tv1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
