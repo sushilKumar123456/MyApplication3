@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         setContentView(R.layout.activity_main);
 
         txtRegId = (TextView) findViewById(R.id.txt_reg_id);
+       // https://github.com/sushilKumar123456/MyApplication3.git
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
