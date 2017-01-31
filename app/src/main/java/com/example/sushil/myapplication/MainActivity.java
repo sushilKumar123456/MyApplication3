@@ -1,13 +1,13 @@
 
+
 package com.example.sushil.myapplication;
 
+import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -15,20 +15,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import Utils.Config;
 import Utils.NotificationUtils;
 
-public class MainActivity extends AppCompatActivity implements Runnable {
+public class MainActivity extends AppCompatActivity implements Runnable, HandlessFragment.TaskStatusCallback {
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG_TASK_FRAGMENT ="task_fragment" ;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private TextView txtRegId, txtMessage,tv1,tv2;
+    private Button btnStart;
+    private ProgressDialog progressDilog;
+    private HandlessFragment mTaskFragment;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,42 +41,62 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         txtRegId = (TextView) findViewById(R.id.txt_reg_id);
        // https://github.com/sushilKumar123456/MyApplication3.git
         txtMessage = (TextView) findViewById(R.id.txt_push_message);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        btnStart=(Button)findViewById(R.id.btnStart);
+        FragmentManager fm = getFragmentManager();
+
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+            public void onClick(View v) {
+             //  new AsyncTaskExample(MainActivity.this).execute();
+
             }
         });
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+////                        .setAction("Action", null).show();
+//            }
+//        });
+//        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+//
+//
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//
+//                // checking for type intent filter
+//              //  https://github.com/sushilKumar123456/MyApplication3.git
+//                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+//                    // gcm successfully registered
+//                    // now subscribe to `global` topic to receive app wide notifications
+//                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+//
+//                    displayFirebaseRegId();
+//
+//                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+//                    // new push notification is received
+//
+//                    String message = intent.getStringExtra("message");
+//
+//                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+//
+//                    txtMessage.setText(message);
+//                }
+//            }
+//        };
 
+//        displayFirebaseRegId();
+       // mTaskFragment = (HandlessFragment)fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+            mTaskFragment=(HandlessFragment)fm.findFragmentByTag(TAG_TASK_FRAGMENT);
 
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                // checking for type intent filter
-              //  https://github.com/sushilKumar123456/MyApplication3.git
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
-                    // gcm successfully registered
-                    // now subscribe to `global` topic to receive app wide notifications
-                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-
-                    displayFirebaseRegId();
-
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
-                    // new push notification is received
-
-                    String message = intent.getStringExtra("message");
-
-                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
-
-                    txtMessage.setText(message);
-                }
-            }
-        };
-
-        displayFirebaseRegId();
+        // If the Fragment is non-null, then it is currently being
+        // retained across a configuration change.
+        if (mTaskFragment == null) {
+            mTaskFragment = new HandlessFragment();
+            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+        }
     }
 
     // Fetches reg id from shared preferences
@@ -109,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
     @Override
     protected void onPause() {
+
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }
@@ -136,6 +160,29 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
     @Override
     public void run() {
+
+    }
+
+
+    @Override
+    public void onPreExecute() {
+
+
+    }
+
+    @Override
+    public void onProgressUpdate(int progress) {
+Log.i("My Progress","Progress="+progress);
+    }
+
+    @Override
+    public void onPostExecute() {
+        progressDilog.dismiss();
+
+    }
+
+    @Override
+    public void onCancelled() {
 
     }
 }
