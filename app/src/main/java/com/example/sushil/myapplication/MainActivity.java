@@ -177,7 +177,7 @@ Log.i("My Progress","Progress="+progress);
 
     @Override
     public void onPostExecute() {
-        progressDilog.dismiss();
+      //  progressDilog.dismiss();
 
     }
 
